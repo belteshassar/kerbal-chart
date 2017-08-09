@@ -25,3 +25,14 @@ Vesta,262.7,0.259,3.46,0.25,Asteroid,gfx/vesta.png
 Enceladus,252.1,0.108,1.61,0.113,Moon of Saturn,gfx/enceladus.png
 Miranda,235.8,0.066,1.2,0.079,Moon of Uranus,gfx/miranda.png
 Mimas,198.2,0.037493,1.1479,0.064,Moon of Saturn,gfx/mimas.png
+Moho,250,2.5263314,38.5995,2.7,Planet of Kerbol,gfx/moho.png
+Eve,700,122.4398,85.219677,16.7,Planet of Kerbol,gfx/eve.png
+Kerbin,600,52.95291513,58.484063,9.81,Planet of Kerbol,gfx/kerbin.png
+Duna,320,4.515427,32.897302,2.94,Planet of Kerbol,gfx/duna.png
+Dres,138,0.32190937,29.242045,1.13,Dwarf Planet of Kerbol,gfx/dres.png
+Jool,6000,4233.2127,4.6787273,7.85,Planet of Kerbol,gfx/jool.png
+Eeloo,210,1.1149224,28.740754,1.69,Dwarf Planet of Kerbol,gfx/eeloo.png
+Mun,200,0.97599066,29.125076,1.63,Moon of Kerbin,gfx/mun.png
+Laythe,500,29.397311,56.144728,7.85,Moon of Jool,gfx/laythe.png
+Vall,300,3.1087655,27.487522,2.31,Moon of Jool,gfx/vall.png
+Tylo,600,42.332127,46.787273,7.85,Moon of Jool,gfx/tylo.png
