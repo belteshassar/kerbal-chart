@@ -157,10 +157,10 @@ var tip = d3.select("body").append("div")
     .style("opacity", 0);
 
 d3.csv("objects.csv", function (error, objects) {
-  x.domain([0.8*d3.min(objects, function(d) { return +d.mass; }),
-            1.5*d3.max(objects, function(d) { return +d.mass; })]);
+  x.domain([Math.pow(10, Math.floor(Math.log10(0.8*d3.min(objects, function(d) { return +d.mass; })))),
+            Math.pow(10, Math.ceil(Math.log10(1.5*d3.max(objects, function(d) { return +d.mass; }))))]);
   console.log(1.5*d3.max(objects, function(d) { return +d.mass; }))
-  y.domain([0, 1.1*d3.max(objects, function(d) { return +d.density; })]);
+  y.domain([0, Math.ceil(1.1*d3.max(objects, function(d) { return +d.density; }))]);
   rad.domain([0, d3.max(objects, function(d) { return +d.radius; })]);
 
   chart.append("g")
