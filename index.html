@@ -131,7 +131,7 @@ var maxDiameter = height/6;
 var x = d3.scale.log()
     .range([0, width,]);
 
-var y = d3.scale.linear()
+var y = d3.scale.log()
     .range([height, 0]);
 
 var rad = d3.scale.linear()
@@ -144,7 +144,8 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left");
+    .orient("left")
+    .tickFormat(function (d) { return y.tickFormat(5,d3.format(",.1r"))(d) });
 
 var chart = d3.select(".chart")
     .attr("width", width + margin.left + margin.right)
@@ -160,7 +161,8 @@ var tip = d3.select("body").append("div")
 d3.csv("objects.csv", function (error, objects) {
   x.domain([Math.pow(10, Math.floor(Math.log10(0.8*d3.min(objects, function(d) { return +d.mass; })))),
             Math.pow(10, Math.ceil(Math.log10(1.5*d3.max(objects, function(d) { return +d.mass; }))))]);
-  y.domain([0, Math.ceil(1.1*d3.max(objects, function(d) { return +d.density; }))]);
+  y.domain([Math.pow(10, Math.floor(Math.log10(d3.min(objects, function(d) { return +d.density; })))),
+            Math.pow(10, Math.ceil(Math.log10(d3.max(objects, function(d) { return +d.density; }))))]);
   rad.domain([0, d3.max(objects, function(d) { return +d.radius; })]);
 
   chart.append("g")
