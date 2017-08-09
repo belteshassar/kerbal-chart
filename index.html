@@ -3,10 +3,7 @@
 © 2017 Daniel Eriksson
 -->
 <meta charset="utf-8">
-<meta property="og:title" content="Rocky and Icy Objects of the Solar System" />
-<meta property="og:type" content="text/html" />
-<meta property="og:url" content="http://deriksson.se/solar-system-chart" />
-<meta property="og:image" content="thumb.png"/>
+<img src="thumb.png" width="0", height="0"></img>
 <title>Rocky and Icy Objects of the Solar System</title>
 <style>
 
@@ -114,7 +111,7 @@ div.tooltip {
     using <a href="https://d3js.org/">d3.js</a>.
     Source: <a href="https://en.wikipedia.org/wiki/List_of_Solar_System_objects_by_size">Wikipedia</a>.
     Images by NASA, except Ganymede for which the image is by NOAA.
-    The code is available <a href="https://github.com/belteshassar/solar-system">on Github</a>.
+    The code is available <a href="https://github.com/belteshassar/solar-system-chart">on Github</a>.
   </p>
 </div>
 
@@ -163,7 +160,6 @@ var tip = d3.select("body").append("div")
 d3.csv("objects.csv", function (error, objects) {
   x.domain([Math.pow(10, Math.floor(Math.log10(0.8*d3.min(objects, function(d) { return +d.mass; })))),
             Math.pow(10, Math.ceil(Math.log10(1.5*d3.max(objects, function(d) { return +d.mass; }))))]);
-  console.log(1.5*d3.max(objects, function(d) { return +d.mass; }))
   y.domain([0, Math.ceil(1.1*d3.max(objects, function(d) { return +d.density; }))]);
   rad.domain([0, d3.max(objects, function(d) { return +d.radius; })]);
 
