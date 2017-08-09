@@ -7,21 +7,21 @@
 <style>
 
 body {
-	background-color: #000;
-	color: #aaa;
+    background-color: #000;
+    color: #aaa;
 }
 
 a:link {
-	color: lightsteelblue;
-	text-decoration: none;
+    color: lightsteelblue;
+    text-decoration: none;
 }
 
 a:visited {
-	color: lightsteelblue;
+    color: lightsteelblue;
 }
 
 a:hover {
-	color: white;
+    color: white;
 }
 
 text {
@@ -62,7 +62,7 @@ text {
   font: 12px sans-serif;
 }
 
-div.tooltip {	
+div.tooltip {
     position: absolute;
     text-align: center;
     padding: 2px;
@@ -105,7 +105,7 @@ div.tooltip {
     This graph shows some of the largest rocky and icy objects of the Solar System.
     The selection includes all objects with a radius larger than 600&nbsp;km that have
     been imaged in high resolution.
-    Mouse over an object to bring it to the front and to display its name.
+    Mouse over an object to bring it to the front and to display a fact sheet about it.
     Created by <a href="http://deriksson.se">Daniel Eriksson</a>
     using <a href="https://d3js.org/">d3.js</a>.
     Source: <a href="https://en.wikipedia.org/wiki/List_of_Solar_System_objects_by_size">Wikipedia</a>.
@@ -153,8 +153,8 @@ var chart = d3.select(".chart")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Define the div for the tooltip
-var tip = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
+var tip = d3.select("body").append("div")
+    .attr("class", "tooltip")
     .style("opacity", 0);
 
 d3.queue()
@@ -174,13 +174,13 @@ function buildChart(error, objects) {
       .call(xAxis);
 
   // text label for the x axis
-  chart.append("text")    
-      .attr("class", "axislabel")         
+  chart.append("text")
+      .attr("class", "axislabel")
       .attr("transform",
             "translate(" + (width/2) + " ," + 
                            (height + margin.bottom - 10) + ")")
       .style("text-anchor", "middle")
-      .text("Mass [10²¹kg]");
+      .text("Mass [10²¹ kg]");
 
   chart.append("g")
       .attr("class", "y axis")
@@ -194,7 +194,7 @@ function buildChart(error, objects) {
       .attr("x",0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Density [10³kg/m³]");
+      .text("Density [10³ kg/m³]");
 
   chart.selectAll(".object")
       .data(objects)
@@ -209,31 +209,31 @@ function buildChart(error, objects) {
       .attr("xlink:href", function(d) { return d.img })
       .on("mouseenter", function(d) {
         this.parentElement.appendChild(this);
-      	tip.transition()
-          	.duration(200)
-          	.style("opacity", 1);
-      	tip.html("")
-          	.style("left", (d3.event.pageX) + "px")
-          	.style("top", (d3.event.pageY - 28) + "px");
-      	tip.append("img")
-      		.attr("src", d.img)
-      		.attr("width", "100px");
-      	tip.append("p")
-      	    .html("<strong>" + d.object + "</strong><br/><i>" + d.class + "</i>");
-      	tip.append("p")
-      	    .html("Mass: " + d3.format(",.3r")(d.mass) + "×10²¹&nbsp;kg<br/>"
-      	    	+ "Radius: " + d3.format(",.3r")(d.radius) + "&nbsp;km<br/>"
-      	    	+ "Gravity: " + d3.format(",.3r")(d.gravity) + "&nbsp;m/s²<br/>"
-      	    	+ "Density: " + d3.format(",.3r")(d.density) + "×10³&nbsp;kg/m³");
+          tip.transition()
+              .duration(200)
+              .style("opacity", 1);
+          tip.html("")
+              .style("left", (d3.event.pageX) + "px")
+              .style("top", (d3.event.pageY - 28) + "px");
+          tip.append("img")
+              .attr("src", d.img)
+              .attr("width", "100px");
+          tip.append("p")
+              .html("<strong>" + d.object + "</strong><br/><i>" + d.class + "</i>");
+          tip.append("p")
+              .html("Mass: " + d3.format(",.3r")(d.mass) + "×10²¹&nbsp;kg<br/>"
+                  + "Radius: " + d3.format(",.3r")(d.radius) + "&nbsp;km<br/>"
+                  + "Gravity: " + d3.format(",.3r")(d.gravity) + "&nbsp;m/s²<br/>"
+                  + "Density: " + d3.format(",.3r")(d.density) + "×10³&nbsp;kg/m³");
       })
       .on("mouseout", function() {
-      	  tip.transition()
+            tip.transition()
               .duration(500)
               .style("opacity", 0);
       });
 
 
-  var refDiameter = 2*rad.ticks(5).slice(-4)[0];
+  var refDiameter = 2*rad.ticks(5).slice(-3)[0];
 
   var circleLegend = chart.append("g")
       .attr("transform", "translate(" + (width - rad(refDiameter) - margin.right) + " " + (height - margin.bottom - rad(refDiameter)) + ") rotate(-45)" )
@@ -246,8 +246,8 @@ function buildChart(error, objects) {
 
   circleLegend.append("text")
       .style("text-anchor", "middle")
-      .text("⌀" + refDiameter + "km")
-      .attr("y", -rad(refDiameter)/10);
+      .text("⌀ " + refDiameter + " km")
+      .attr("y", -2);
 
   circleLegend.append("line")
       .attr("x1", 4-rad(refDiameter)/2)
