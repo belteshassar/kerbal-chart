@@ -115,7 +115,6 @@ div.tooltip {
 </div>
 
 <script src="https://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
-<script src="https://d3js.org/d3-queue.v3.min.js"></script>
 <script>
 
 var margin = {top: 20, right: 30, bottom: 40, left: 40},
@@ -157,11 +156,7 @@ var tip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-d3.queue()
-  .defer(d3.csv, "objects.csv")
-  .await(buildChart);
-
-function buildChart(error, objects) {
+d3.csv("objects.csv", function (error, objects) {
   x.domain([0.8*d3.min(objects, function(d) { return +d.mass; }),
             1.5*d3.max(objects, function(d) { return +d.mass; })]);
   console.log(1.5*d3.max(objects, function(d) { return +d.mass; }))
@@ -246,7 +241,7 @@ function buildChart(error, objects) {
 
   circleLegend.append("text")
       .style("text-anchor", "middle")
-      .text("⌀ " + refDiameter + " km")
+      .text("⌀ " + d3.format(",.3r")(refDiameter) + " km")
       .attr("y", -2);
 
   circleLegend.append("line")
@@ -257,6 +252,6 @@ function buildChart(error, objects) {
       .attr("marker-start", "url(#arrow-start)")
       .attr("marker-end", "url(#arrow-end)");
 
-}
+});
 
 </script>
