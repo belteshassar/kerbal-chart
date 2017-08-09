@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--
+© 2017 Daniel Eriksson
+-->
+<meta charset="utf-8">
+<style>
+
+body {
+	background-color: #000;
+	color: #aaa;
+}
+
+text {
+  fill: #aaa;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #aaa;
+  shape-rendering: crispEdges;
+}
+
+.axislabel {
+  font: 12px sans-serif;
+}
+
+.circle-legend text {
+  font : 10px sans-serif;
+}
+
+.circle-legend circle {
+  stroke: #aaa;
+  stroke-dasharray: 3,3;
+  fill: none;
+}
+
+.circle-legend line {
+    stroke: #aaa;
+    stroke-width: 1px;
+}
+
+#colophon {
+  font: 12px sans-serif;
+}
+
+div.tooltip {	
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: #aaa;
+    color: #000;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+</style>
+<svg class="chart" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <marker id="arrow-start"
+            markerWidth="6"
+            markerHeight="6"
+            viewBox="-3 -3 6 6"
+            refX="1"
+            refY="0"
+            markerUnits="strokeWidth"
+            orient="auto">
+      <polygon points="1,0 3,3 -3,0 3,-3" fill="#aaa"/>
+    </marker>
+    <marker id="arrow-end"
+            markerWidth="6"
+            markerHeight="6"
+            viewBox="-3 -3 6 6"
+            refX="-1"
+            refY="0"
+            markerUnits="strokeWidth"
+            orient="auto">
+      <polygon points="-1,0 -3,3 3,0 -3,-3" fill="#aaa"/>
+    </marker>
+  </defs>
+</svg>
+
+<div id="colophon">
+  <p>
+    This graph shows some of the largest rocky and icy objects of the Solar System.
+    The selection includes all objects with a radius larger than 600&nbsp;km that have
+    been imaged in high resolution.
+    Mouse over an object to bring it to the front and to display its name.
+    Created by <a href="http://deriksson.se">Daniel Eriksson</a>
+    using <a href="https://d3js.org/">d3.js</a>.
+    Source: <a href="https://en.wikipedia.org/wiki/List_of_Solar_System_objects_by_size">Wikipedia</a>.
+    Images by NASA, except Ganymede for which the image is by NOAA.
+    The code is available <a href="https://github.com/belteshassar/solar-system">on Github</a>.
+  </p>
+</div>
+
+<script src="https://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+<script>
+
+var margin = {top: 20, right: 30, bottom: 40, left: 40},
+    width = 1024 - margin.left - margin.right,
+    height = 768 - margin.top - margin.bottom;
+
+d3.select("#colophon")
+    .style("margin-left", margin.left + "px")
+    .style("width", width + "px");
+
+var maxDiameter = height/6;
+
+var x = d3.scale.log()
+    .range([0, width,]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var rad = d3.scale.linear()
+    .range([0, maxDiameter/2]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickFormat(function (d) { return x.tickFormat(5,d3.format(",.1r"))(d) });
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var chart = d3.select(".chart")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Define the div for the tooltip
+var tip = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+d3.queue()
+  .defer(d3.csv, "objects.csv")
+  .await(buildChart);
+
+function buildChart(error, objects) {
+  x.domain([0.8*d3.min(objects, function(d) { return +d.mass; }),
+            1.5*d3.max(objects, function(d) { return +d.mass; })]);
+  console.log(1.5*d3.max(objects, function(d) { return +d.mass; }))
+  y.domain([0, 1.1*d3.max(objects, function(d) { return +d.density; })]);
+  rad.domain([0, d3.max(objects, function(d) { return +d.radius; })]);
+
+  chart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  // text label for the x axis
+  chart.append("text")    
+      .attr("class", "axislabel")         
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + margin.bottom - 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Mass [10²¹kg]");
+
+  chart.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+  // text label for the y axis
+  chart.append("text")
+      .attr("class", "axislabel")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Density [10³kg/m³]");
+
+  chart.selectAll(".object")
+      .data(objects)
+      .enter().append("image")
+      .attr("class", "object")
+      .attr("x", function(d) { return x(d.mass); })
+      .attr("y", function(d) { return y(d.density); })
+      .attr("transform", function(d) { return "translate(-" + rad(d.radius) +
+                                                       " -" + rad(d.radius) + ")"; })
+      .attr("height", function(d) { return 2*rad(d.radius); })
+      .attr("width", function(d) { return 2*rad(d.radius); })
+      .attr("xlink:href", function(d) { return d.img })
+      .on("mouseenter", function(d) {
+        this.parentElement.appendChild(this);
+      	tip.transition()
+          	.duration(200)
+          	.style("opacity", 1);
+      	tip.html("")
+          	.style("left", (d3.event.pageX) + "px")
+          	.style("top", (d3.event.pageY - 28) + "px");
+      	tip.append("img")
+      		.attr("src", d.img)
+      		.attr("width", "100px");
+      	tip.append("p")
+      	    .html("<strong>" + d.object + "</strong><br/><i>" + d.class + "</i>");
+      	tip.append("p")
+      	    .html("Mass: " + d3.format(",.3r")(d.mass) + "×10²¹&nbsp;kg<br/>"
+      	    	+ "Radius: " + d3.format(",.3r")(d.radius) + "&nbsp;km<br/>"
+      	    	+ "Gravity: " + d3.format(",.3r")(d.gravity) + "&nbsp;m/s²<br/>"
+      	    	+ "Density: " + d3.format(",.3r")(d.density) + "×10³&nbsp;kg/m³");
+      })
+      .on("mouseout", function() {
+      	  tip.transition()
+              .duration(500)
+              .style("opacity", 0);
+      });
+
+
+  var refDiameter = 2*rad.ticks(5).slice(-4)[0];
+
+  var circleLegend = chart.append("g")
+      .attr("transform", "translate(" + (width - rad(refDiameter) - margin.right) + " " + (height - margin.bottom - rad(refDiameter)) + ") rotate(-45)" )
+      .attr("class", "circle-legend");
+
+  circleLegend.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .attr("r", rad(refDiameter)/2)
+
+  circleLegend.append("text")
+      .style("text-anchor", "middle")
+      .text("⌀" + refDiameter + "km")
+      .attr("y", -rad(refDiameter)/10);
+
+  circleLegend.append("line")
+      .attr("x1", 4-rad(refDiameter)/2)
+      .attr("y1", 0)
+      .attr("x2", rad(refDiameter)/2-4)
+      .attr("y2", 0)
+      .attr("marker-start", "url(#arrow-start)")
+      .attr("marker-end", "url(#arrow-end)");
+
+}
+
+</script>
